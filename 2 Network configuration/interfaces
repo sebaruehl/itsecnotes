@@ -11,8 +11,18 @@ iface eth0 inet static
     address 192.168.0.1
     netmask 255.255.255.0
     gateway 192.168.0.254
+    # add static routes
+    up route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1
+    down route del -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1
+    up route add default gw 192.168.1.1
+    down route del default gw 192.168.1.1
 
 iface eth0 inet6 static
     address 2607:f0d0:2001:000a::0010
     netmask 64
     gateway 2607:f0d0:2001:000a::0001
+    # add static routes
+    up ip -6 route add 2607:f0d0:2001:000b::0010/64 via 2607:f0d0:2001:000b::0001
+    down ip -6 route del 2607:f0d0:2001:000b::0010/64 via 2607:f0d0:2001:000b::0001
+    up ip -6 route add default via 2607:f0d0:2001:000b::0001
+    down ip -6 route del default via 2607:f0d0:2001:000b::0001
