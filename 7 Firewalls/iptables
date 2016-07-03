@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# restore saved firewall configuration
+iptables -F
+iptables-restore < /etc/iptables.up.rules
