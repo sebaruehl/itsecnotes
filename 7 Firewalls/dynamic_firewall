@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# delete everything from before
+iptables -F
+iptables -X
+iptables -Z
+iptables -t nat -F
+
+# default policies: drop everything
+iptables -P INPUT   DROP
+iptables -P OUTPUT  DROP
+iptables -P FORWARD DROP
+
+# allow established connections (the responses to our outgoing traffic)
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# drop non-conforming packets
+iptables -A INPUT -m state --state INVALID -j DROP
+
+# allow incoming ssh
+iptables -A INPUT -p tcp --dport 22 -j LOG --log-level 1
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# allow outgoing ssh
+iptables -A OUTPUT -p tcp --dport 22 -j LOG --log-level 1
+iptables -A OUTPUT -p tcp --dport 22 -j ACCEPT
+
+# allow incoming ftp
+iptables -A INPUT -p tcp --dport 20 -j ACCEPT
+iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+
+# allow outgoing ftp
+iptables -A OUTPUT -p tcp --dport 20 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 21 -j ACCEPT
