@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# flush nat chains
+iptables -t nat -F
+
+iptables -t nat -A PREROUTING -j ACCEPT
+
+iptables -t nat -A OUTPUT -j ACCEPT
+
+# masquerade traffic comming from 192.168.0.2 to 192.168.0.54
+iptables -t nat -A POSTROUTING -o eth1 -s 192.168.0.2 -d 192.168.0.54 -j MASQUERADE
